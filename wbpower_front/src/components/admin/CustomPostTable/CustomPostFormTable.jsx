@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../../../api/api";
+import { FiEdit, FiTrash2, FiPlus, FiSearch } from "react-icons/fi";
 
 export default function CustomPostFormTable() {
   const [categories, setCategories] = useState([]);
@@ -67,21 +68,21 @@ export default function CustomPostFormTable() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-xl rounded-2xl">
-      <h2 className="text-2xl font-bold mb-4">Create Dynamic Table</h2>
-
-      {message && (
-        <div className="mb-4 p-3 rounded bg-blue-100 text-blue-700">{message}</div>
-      )}
-
-      <form onSubmit={handleSubmit}>
+    <div>
+                <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2 top-7">
+              <div className="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                <h6 className="text-white text-capitalize ps-3">Create Dynamic Table</h6>
+              </div>
+            </div>
+        
+      <form onSubmit={handleSubmit} className="mx-auto p-frm bg-white rounded-2xl shadow-lg font-sans ">
         {/* Category Dropdown */}
         <div className="mb-4">
           <label className="block font-medium mb-2">Select Category</label>
           <select
             value={tableName}
             onChange={(e) => setTableName(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border px-3 py-2"
             required
           >
             <option value="">-- Choose Category --</option>
@@ -95,24 +96,24 @@ export default function CustomPostFormTable() {
 
         {/* Dynamic Fields */}
         <div>
-          <h3 className="font-medium mb-2">Fields</h3>
+          <label className="block font-medium mb-2">Fields</label>
           {fields.map((field, index) => (
             <div
               key={index}
-              className="flex gap-3 mb-3 items-center border p-3 rounded"
+              className="flex gap-3 mb-3 items-center border p-3"
             >
               <input
                 type="text"
                 placeholder="Field name"
                 value={field.name}
                 onChange={(e) => handleFieldChange(index, "name", e.target.value)}
-                className="flex-1 border px-3 py-2 rounded"
+                className="flex-1 border px-3 py-2"
                 required
               />
               <select
                 value={field.type}
                 onChange={(e) => handleFieldChange(index, "type", e.target.value)}
-                className="border px-3 py-2 rounded"
+                className="border px-3 py-2"
               >
                 <option value="string">String</option>
                 <option value="integer">Integer</option>
@@ -128,14 +129,15 @@ export default function CustomPostFormTable() {
                 onClick={() => removeField(index)}
                 className="text-red-500 font-bold"
               >
-                ✕
+                <FiTrash2 size={15} />
               </button>
+
             </div>
           ))}
           <button
             type="button"
             onClick={addField}
-            className="px-4 py-2 bg-green-600 text-white rounded"
+            className="px-4 py-2 bg-green-600 text-white"
           >
             + Add Field
           </button>
@@ -144,11 +146,17 @@ export default function CustomPostFormTable() {
         {/* Submit */}
         <button
           type="submit"
-          className="mt-5 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="p-head w-btn py-2 text-white font-semibold rounded-lg transition mt-5 w-full py-2"
         >
           Create Table
         </button>
+        {message && (
+         <p className="mt-1 text-sm text-green-600">{message}</p>
+  
+      )}
+        
       </form>
+
     </div>
   );
 }

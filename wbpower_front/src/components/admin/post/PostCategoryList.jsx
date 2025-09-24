@@ -133,10 +133,10 @@ export default function PostCategoryList() {
                     <td className="px-4 py-2 font-semibold">{post.category_name}</td>
                     <td className="px-4 py-2 text-gray-600 ">{post.category_desc}</td>
                     <td className="px-4 py-2 flex  gap-2">
-                      <button onClick={() => handleEdit(post)} className="text-blue-500 hover:text-blue-700">
+                      <button onClick={() => handleEdit(post)}   className="p-1.5 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full">
                         <FiEdit />
                       </button>
-                      <button onClick={() => handleDelete(post.id)} className="text-red-500 hover:text-red-700">
+                      <button onClick={() => handleDelete(post.id)}  className="p-1.5 bg-red-100 hover:bg-red-200 text-red-600 rounded-full">
                         <FiTrash2 />
                       </button>
                     </td>

@@ -80,8 +80,7 @@ export default function CustomPostForm({ tableName }) {
       });
 
       if (response.status === 200 || response.status === 201) {
-        alert("Custom post created successfully!");
-        navigate("/custom-post-list");
+        navigate(`/custom-post-list/${tableName}`);
       } else {
         setError("Failed to create custom post");
       }
@@ -92,20 +91,24 @@ export default function CustomPostForm({ tableName }) {
       setSubmitting(false);
     }
   };
+if (loading) {
 
+    return <p className="text-center mt-10">Loading...</p>;
+  }
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Create New Custom Post: {tableName}</h2>
 
-      {loading ? (
-        <p>Loading form fields...</p>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
+   <div>
+                <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2 top-7">
+              <div className="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                <h6 className="text-white text-capitalize ps-3">Create Custom Post {tableName}</h6>
+              </div>
+            </div>
+
+  
+        <form onSubmit={handleSubmit} className="mx-auto p-frm bg-white rounded-2xl shadow-lg font-sans">
           {formFields.map((field, index) => (
             <div key={index} className="flex flex-col">
-              <label htmlFor={field.name} className="font-medium text-gray-700 mb-1">
+              <label htmlFor={field.name}  className="block mb-1 font-medium text-gray-700">
                 {field.label || field.name}
               </label>
 
@@ -117,7 +120,7 @@ export default function CustomPostForm({ tableName }) {
                   name={field.name}
                   value={formData[field.name]}
                   onChange={handleInputChange}
-                  className="px-4 py-2 border rounded-md"
+                   className={`w-full px-2 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                   placeholder={field.placeholder || field.label}
                   required={field.required || false}
                 />
@@ -201,14 +204,16 @@ export default function CustomPostForm({ tableName }) {
           <button
             type="submit"
             disabled={submitting}
-            className={`w-full py-2 rounded-md mt-4 text-white ${
-              submitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-            }`}
+            className={`p-head w-btn py-2 text-white font-semibold rounded-lg transition ${
+          submitting
+            ? "bg-indigo-300 cursor-not-allowed"
+            : "bg-indigo-600 hover:bg-indigo-700"
+        }`}
           >
             {submitting ? "Submitting..." : "Submit"}
           </button>
         </form>
-      )}
+
     </div>
   );
 }

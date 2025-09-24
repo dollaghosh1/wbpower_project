@@ -64,16 +64,15 @@ const AdminSidebar = ({ sidebarOpen, closeSidebar }) => {
       icon: <FaSliders />,
       children: [{ label: "Slider List", to: "/slider" }],
     },
+    { label: "Menu", icon: <MdOutlineMenu />, to: "/menu" },
     {
       label: "Post",
       icon: <MdPostAdd />,
       children: [
-        { label: "Post List", to: "/post" },
         { label: "Post Category", to: "/post-category" },
         { label: "Add Custom Post", to: "/custom-post-form-table" },
       ],
     },
-    { label: "Menu", icon: <MdOutlineMenu />, to: "/menu" },
     {
       label: "Custom Post",
       icon: <MdPostAdd />,

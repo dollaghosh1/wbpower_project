@@ -215,8 +215,8 @@ const toggleStatus = async (id, currentStatus) => {
                      <td className="px-4 py-2 table-data">
                             <p
                         onClick={() => toggleStatus(Slider.id, Slider.is_active)}
-                        className={`cursor-pointer mb-0  line-height-0 font-semibold ${
-                          Number(Slider.is_active) === 1 ? "text-green-500" : "text-red-500"
+                        className={`cursor-pointer text-sm font-semibold px-2 py-1 rounded-full ${
+                          Number(Slider.is_active) === 1 ? "text-green-500 bg-green-100" : "text-red-500 bg-red-100"
                         }`}
                       >
                         {Number(Slider.is_active) === 1 ? "Active" : "Inactive"}
@@ -225,13 +225,13 @@ const toggleStatus = async (id, currentStatus) => {
                       <td className="px-4 py-2 flex justify-center gap-2 table-data">
                         <button
                           onClick={() => handleEdit(Slider)}
-                          className="p-2 rounded-lg text-blue-600 transition"
+                          className="p-1.5 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full"
                         >
                           <FiEdit size={15} />
                         </button>
                         <button
                           onClick={() => handleDelete(Slider.id)}
-                          className="p-2 rounded-lg text-red-600 transition"
+                          className="p-1.5 bg-red-100 hover:bg-red-200 text-red-600 rounded-full"
                         >
                           <FiTrash2 size={15} />
                         </button>

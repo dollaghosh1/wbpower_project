@@ -96,7 +96,7 @@ export default function CustomPostList({ tableName }) {
       {/* Top Toolbar */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2 font-poppins">
-          {tableName.replace("custompost_", "")} / List
+          {/* Optional Title */}
         </h1>
 
         <div className="flex gap-3 items-center">
@@ -131,9 +131,9 @@ export default function CustomPostList({ tableName }) {
           {/* Add Button */}
           <button
             onClick={handleAdd}
-            className="flex items-center gap-2 px-4 py-2 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 transition"
+           className="flex items-center gap-2 px-4 py-2 p-head text-white font-medium rounded-lg shadow hover:bg-blue-700 transition"
           >
-            <FiPlus /> Create
+         Create
           </button>
         </div>
       </div>
@@ -145,7 +145,9 @@ export default function CustomPostList({ tableName }) {
           {/* Table Header */}
           <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2 top-7">
             <div className="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-              <h6 className="text-white text-capitalize ps-3">Post List</h6>
+              <h6 className="text-white text-capitalize ps-3">
+                {tableName.replace("custompost_", "")} / List
+              </h6>
             </div>
           </div>
 
@@ -157,12 +159,13 @@ export default function CustomPostList({ tableName }) {
                   <th className="px-6 pb-3 pt-5 text-left">SL no</th>
                   {currentPosts[0] &&
                     Object.keys(currentPosts[0])
-                      .filter((col) => col !== "id")
+                      .filter((col) => col !== "id" && col !== "is_active") // exclude is_active here
                       .map((col, idx) => (
                         <th key={idx} className="px-6 pb-3 pt-5 text-left">
                           {col.replace("_", " ").toUpperCase()}
                         </th>
                       ))}
+                  <th className="px-6 pb-3 pt-5 text-center">Status</th>
                   <th className="px-6 pb-3 pt-5 text-center">Actions</th>
                 </tr>
               </thead>
@@ -176,12 +179,17 @@ export default function CustomPostList({ tableName }) {
                 ) : (
                   currentPosts.map((post, idx) => (
                     <tr key={post.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-2 table-data font-medium">{indexOfFirstPost + idx + 1}</td>
+                      <td className="px-4 py-2 table-data font-medium">
+                        {indexOfFirstPost + idx + 1}
+                      </td>
                       {Object.keys(post)
-                        .filter((col) => col !== "id")
+                        .filter((col) => col !== "id" && col !== "is_active") // exclude is_active here too
                         .map((col, cIdx) => {
                           const value = post[col];
-                          if (typeof value === "string" && value.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                          if (
+                            typeof value === "string" &&
+                            value.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+                          ) {
                             return (
                               <td key={cIdx} className="px-4 py-2 table-data">
                                 <img
@@ -198,23 +206,38 @@ export default function CustomPostList({ tableName }) {
                             </td>
                           );
                         })}
-                      <td className="px-4 py-2 flex justify-center gap-2 table-data">
-                        <button onClick={() => handleEdit(post)} className="p-2 rounded-lg text-blue-600">
-                          <FiEdit size={15} />
-                        </button>
-                        <button onClick={() => handleDelete(post.id)} className="p-2 rounded-lg text-red-600">
-                          <FiTrash2 size={15} />
-                        </button>
-                        {post.is_active !== undefined && (
-                          <p
-                            onClick={() => toggleStatus(post.id, post.is_active)}
-                            className={`cursor-pointer mb-0 line-height-0 font-semibold ${
-                              Number(post.is_active) === 1 ? "text-green-500" : "text-red-500"
-                            }`}
+                      {/* Status toggle */}
+                      <td className="px-4 py-2 table-data font-medium text-center">
+                        <span
+                          onClick={() => toggleStatus(post.id, Number(post.is_active) || 0)}
+                          className={`cursor-pointer text-sm font-semibold px-2 py-1 rounded-full ${
+                            Number(post.is_active) === 1
+                              ? "text-green-600 bg-green-100"
+                              : "text-red-600 bg-red-100"
+                          }`}
+                          title="Toggle Status"
+                        >
+                          {Number(post.is_active) === 1 ? "Active" : "Inactive"}
+                        </span>
+                      </td>
+                      {/* Actions */}
+                      <td className="px-4 py-2 table-data font-medium text-center">
+                        <div className="flex items-center gap-3 justify-center">
+                          <button
+                            onClick={() => handleEdit(post)}
+                            className="p-1.5 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full"
+                            title="Edit"
                           >
-                            {Number(post.is_active) === 1 ? "Active" : "Inactive"}
-                          </p>
-                        )}
+                            <FiEdit size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(post.id)}
+                            className="p-1.5 bg-red-100 hover:bg-red-200 text-red-600 rounded-full"
+                            title="Delete"
+                          >
+                            <FiTrash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -239,7 +262,9 @@ export default function CustomPostList({ tableName }) {
                   key={i + 1}
                   onClick={() => paginate(i + 1)}
                   className={`w-9 h-9 flex items-center justify-center rounded border text-sm transition ${
-                    currentPage === i + 1 ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-700 hover:bg-gray-100"
+                    currentPage === i + 1
+                      ? "p-head text-white border-blue-600"
+                      : "bg-white text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   {i + 1}
