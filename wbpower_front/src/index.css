@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+.body {background: #f1f1f1;}
+.main .sidebarWrapper{ height: 100vh;}
+.main .sidebarWrapper .sidebar{ height: 100vh; background: #eee9ee;}
+.main .sidebarWrapper .sidebarTabd{ justify-content: flex-start !important;}

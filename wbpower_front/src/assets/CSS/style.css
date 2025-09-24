@@ -1,0 +1,117 @@
+body {
+  font-family: 'Poppins', sans-serif;
+}
+a {
+  text-decoration: none; /* removes underline */
+  color: var(--color-gray-700);
+}
+.p-head{
+     background-image: linear-gradient(195deg, #42424a, #191919);
+
+}
+/* .p-foooter {
+    background-color: rgba(68, 68, 70, 0.85) !important;
+} */
+.rounded-lg {
+    border-radius: 6px !important;
+}
+.h-text{
+    font-size: 1 rem;
+}
+.h-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem 1rem 3rem;
+  background-color: var(--color-gray-100);
+  color: #000;
+}
+.rounded {
+    border-radius: calc(infinity * 1px) !important;
+}
+.font-poppins{
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 0px;
+}
+.max-wd {
+    max-width: 90%;
+}
+.p-frm {
+    padding: 4rem;
+    border: 1px solid #c1c4c7;
+}
+.w-btn{
+    width: 18%;
+}
+.text-power{
+    font-size: 1.3rem;
+    color: #000;
+}
+.text-logout {
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+}
+.text-logout:hover {
+    color: rgb(252, 82, 82);
+}
+
+.m-header {
+    margin: 16px 8px 8px 8px;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #e1dada;
+}
+
+.min-h-screen{
+        background-color: #f3f4f6;
+}
+
+.border-blue-100,.border-red-100{
+    border: 1px solid ;
+    border-radius: 4px;
+}
+
+/* .border-blue-100:hover,.border-red-100:hover{
+    border: 1px solid;
+    border-radius: 4px;
+} */
+
+.bg-gradient-dark {
+    background-image: linear-gradient(195deg,#42424a,#191919);
+    box-shadow: 2px 2px 5px 0px #828283;
+}
+.border-radius-lg {
+    border-radius: .5rem;
+}
+.table-p-5 {
+    padding: 0rem 3rem 3rem 3rem!important;
+}
+/* .table-data {
+    padding: .5rem !important;
+    color: var(--bs-table-color-state,var(--bs-table-color-type,var(--bs-table-color))) !important;
+    background-color: var(--bs-table-bg) !important;
+    border-bottom-width: 1px !important;
+    box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state,var(--bs-table-bg-type,var(--bs-table-accent-bg)));
+} */
+.imageM{
+    width: 70px;
+    margin: 10px 0px;
+    border-radius: 4px;
+}
+.ck-editor__editable_inline {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.font-weight-bolder {
+    font-weight: 700 
+}
+.divide-y tr {
+    border-bottom-width: 1px !important;
+}
+
+.border {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
