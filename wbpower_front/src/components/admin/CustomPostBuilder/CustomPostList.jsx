@@ -65,7 +65,7 @@ export default function CustomPostList({ tableName }) {
 
   // Actions
   const handleAdd = () => navigate(`/custom-post-form/${tableName}`);
-  const handleEdit = (post) => navigate(`/custom-post/edit/${tableName}/${post.id}`);
+  const handleEdit = (post) => navigate(`/custom-post-form/${tableName}/${post.id}`);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;

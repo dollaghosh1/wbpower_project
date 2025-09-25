@@ -66,7 +66,7 @@ function App() {
             <Route path="slider" element={<Slider />} />
             <Route path="sliderform/:id?" element={<SliderForm />} />
             <Route path="custom-post-form-table" element={<CustomPostFormTable />} />
-            <Route path="custom-post-form/:tableName" element={<CustomPostFormPage />} />
+            <Route path="custom-post-form/:tableName/:id?" element={<CustomPostFormPage />} />
             <Route path="custom-post-list/:tableName" element={<CustomPostList />} />
           </Route>
 

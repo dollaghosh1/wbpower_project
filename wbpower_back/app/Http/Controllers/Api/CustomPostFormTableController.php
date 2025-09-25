@@ -226,51 +226,77 @@ public function getFormFields($tableName)
 }
 public function createCustomPost(Request $request, $tableName)
 {
-    try{
-    $user = Auth::user();
-    if (!$user) return response()->json(['success'=>false,'message'=>'Unauthorized'],401);
-
-    if (!Schema::hasTable($tableName)) 
-        return response()->json(['error'=>'Table not found'],404);
-
-    $columns = Schema::getColumnListing($tableName);
-    $data = [];
-
-    foreach ($columns as $column) {
-        // Skip control columns
-        if (in_array($column, ['id', 'created_at', 'updated_at', 'is_active'])) continue;
-
-        // Check for file upload
-        if ($request->hasFile($column)) {
-            $file = $request->file($column);
-
-            // Example: custom folder for images named after the column
-            $folder = 'uploads/' . strtolower($tableName) . '/' . strtolower($column);
-            $fileName = time() . '_' . $file->getClientOriginalName();
-
-            // Move file to public folder
-            $file->move(public_path($folder), $fileName);
-
-            $data[$column] = $folder . '/' . $fileName;
-
-        } elseif ($request->has($column)) {
-            $data[$column] = $request->input($column);
+    try {
+        // 🔐 Auth check
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
         }
+
+        // ✅ Check if table exists
+        if (!Schema::hasTable($tableName)) {
+            return response()->json(['success' => false, 'message' => 'Table not found'], 404);
+        }
+
+        // 📋 Get all columns from table
+        $columns = Schema::getColumnListing($tableName);
+        $data = [];
+
+        // 🛠 Prepare insert data
+        foreach ($columns as $column) {
+            // Skip auto/controlled fields
+            if (in_array($column, ['id', 'created_at', 'updated_at'])) {
+                continue;
+            }
+
+            // 📁 Handle file uploads
+            if ($request->hasFile($column)) {
+                $file = $request->file($column);
+                $folder = 'uploads/' . strtolower($tableName) . '/' . strtolower($column);
+                $fileName = time() . '_' . $file->getClientOriginalName();
+
+                // Move file to public directory
+                $file->move(public_path($folder), $fileName);
+
+                $data[$column] = $folder . '/' . $fileName;
+            }
+            // 📝 Handle regular input
+            elseif ($request->has($column)) {
+                $data[$column] = $request->input($column);
+            }
+        }
+
+        if (in_array('is_active', $columns) && !isset($data['is_active'])) {
+            $data['is_active'] = 1;
+        }
+
+      
+        if (in_array('created_at', $columns)) {
+            $data['created_at'] = now();
+        }
+        if (in_array('updated_at', $columns)) {
+            $data['updated_at'] = now();
+        }
+        DB::table($tableName)->insert($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post created successfully!',
+        ], 200);
+
+    } catch (ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        // 🧯 Catch all other errors
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred.',
+            'error' => $e->getMessage()
+        ], 500);
     }
-
-    // Insert into dynamic table
-    DB::table($tableName)->insert($data);
-     return response()->json([
-                'success'=>true,
-                'message'=>'Post created successfully!'
-            ], 200);
-        }catch (ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'errors'  => $e->errors()
-            ], 422);
-        }
-   // return response()->json(['success'=>true,'message'=>'Post created successfully']);
 }
 public function listCustomPosts($tableName)
 {
@@ -290,7 +316,7 @@ public function listCustomPosts($tableName)
             ->get();
 
         // Columns to exclude from the response
-        $excludeColumns = ['created_at', 'updated_at'];
+        $excludeColumns = ['updated_at'];
 
         // Map each post to exclude the unwanted columns
         $filteredPosts = $customPosts->map(function ($post) use ($excludeColumns) {
@@ -312,6 +338,95 @@ public function listCustomPosts($tableName)
         return response()->json([
             'success' => false,
             'message' => $e->getMessage()
+        ], 500);
+    }
+}
+public function getCustomPostDetails($tableName, $id)
+{
+    try {
+        if (!Schema::hasTable($tableName)) {
+            return response()->json(['success' => false, 'message' => 'Table not found'], 404);
+        }
+
+        $post = DB::table($tableName)->where('id', $id)->first();
+
+        if (!$post) {
+            return response()->json(['success' => false, 'message' => 'Post not found'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $post
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+public function updateCustomPost(Request $request, $tableName, $id)
+{
+    try {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        if (!Schema::hasTable($tableName)) {
+            return response()->json(['success' => false, 'message' => 'Table not found'], 404);
+        }
+
+        $columns = Schema::getColumnListing($tableName);
+        $existing = DB::table($tableName)->where('id', $id)->first();
+
+        if (!$existing) {
+            return response()->json(['success' => false, 'message' => 'Post not found'], 404);
+        }
+
+        $data = [];
+
+        foreach ($columns as $column) {
+            if (in_array($column, ['id', 'created_at', 'updated_at'])) {
+                continue;
+            }
+
+            if ($request->hasFile($column)) {
+                $file = $request->file($column);
+                $folder = 'uploads/' . strtolower($tableName) . '/' . strtolower($column);
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path($folder), $fileName);
+
+                $data[$column] = $folder . '/' . $fileName;
+            } elseif ($request->has($column)) {
+                $data[$column] = $request->input($column);
+            }
+        }
+
+        // Update timestamp if column exists
+        if (in_array('updated_at', $columns)) {
+            $data['updated_at'] = now();
+        }
+
+        DB::table($tableName)->where('id', $id)->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post updated successfully!',
+        ], 200);
+
+    } catch (ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred.',
+            'error' => $e->getMessage()
         ], 500);
     }
 }

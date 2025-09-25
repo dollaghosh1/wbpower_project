@@ -69,4 +69,5 @@ Route::middleware('auth:api')->post('/custom-post/create/{tableName}', [CustomPo
 
     // List posts for a table
 Route::middleware('auth:api')->get('/custom-post/list/{tableName}', [CustomPostFormTableController::class, 'listCustomPosts']);
-
+Route::middleware('auth:api')->post('/custom-post/update/{tableName}/{id}', [CustomPostFormTableController::class, 'updateCustomPost']);
+Route::middleware('auth:api')->get('/custom-post/details/{tableName}/{id}', [CustomPostFormTableController::class, 'getCustomPostDetails']);
